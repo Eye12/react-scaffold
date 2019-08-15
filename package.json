@@ -1,0 +1,26 @@
+{
+  "name": "react_scaffold_for_plugin",
+  "version": "1.0.0",
+  "description": "this is a react scaffold for uploading custom react plugin to npm",
+  "main": "index.js",
+  "files": [],
+  "private": false,
+  "scripts": {
+    "test": "react-scaffold custom-react-plugin npm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eye12/react-scaffold-for-plugin.git"
+  },
+  "keywords": [
+    "react-scaffold",
+    "custom-react-plugin",
+    "npm"
+  ],
+  "author": "lle_wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eye12/react-scaffold-for-plugin/issues"
+  },
+  "homepage": "https://github.com/Eye12/react-scaffold-for-plugin#readme"
+}
