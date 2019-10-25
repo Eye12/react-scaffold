@@ -32,7 +32,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        publicPath: "",
+        // publicPath: "",
         filename: "js/[name].js",
         chunkFilename: "js/[name].js",
         library: "", // 插件输出名称
@@ -47,11 +47,14 @@ module.exports = {
         contentBase: "./dist",
         hot: isDevMode
     },
+    resolve: {
+        extensions: [".js", ".jsx"],
+    },
     module: {
         rules: [
             {
                 enforce: "pre",
-                test: /\.(js|jsx)$/i,
+                test: /\.jsx?$/i,
                 exclude: /(node_modules|bower_components)/,
                 loader: "eslint-loader",
                 options: {
@@ -59,7 +62,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(js|jsx)$/i,
+                test: /\.jsx?$/i,
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader'
