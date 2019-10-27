@@ -28,7 +28,7 @@ let baseOptimization = {
 module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
-        index: "./src/index.jsx"
+        index: "./src/index.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),
