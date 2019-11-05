@@ -49,7 +49,7 @@ module.exports = {
         hot: isDevMode
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".jsx"],
+        extensions: [".tsx", ".ts", ".jsx", ".js"],
     },
     node: {
         fs: "empty"
@@ -70,7 +70,7 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
-                        loader: 'babel-loader'
+                        loader: "balel-loader"
                     }, {
                         loader: "ts-loader"
                     }

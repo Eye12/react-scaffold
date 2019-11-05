@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
-import "./global.scss";
+import "./styles/global.scss";
 
 class Index extends Component {
     render() {
+        console.log("=========>>>", 9999);
         return (
            <div>This is a new world you will see</div>
         );
