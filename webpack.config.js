@@ -10,6 +10,7 @@ const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// const CopyPlugin = require('copy-webpack-plugin');
 let isDevMode = process.env.NODE_ENV === "development";
 let baseOptimization = {
     usedExports: true, // 清除死代码
@@ -48,18 +49,32 @@ module.exports = {
         hot: isDevMode
     },
     resolve: {
-        extensions: [".js", ".jsx"],
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
+    },
+    node: {
+        fs: "empty"
     },
     module: {
         rules: [
             {
                 enforce: "pre",
-                test: /\.jsx?$/i,
+                test: /\.j|tsx?$/i,
                 exclude: /(node_modules|bower_components)/,
                 loader: "eslint-loader",
                 options: {
                     formatter: require("eslint-friendly-formatter")
                 }
+            },
+            {
+                test: /\.tsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    }, {
+                        loader: "ts-loader"
+                    }
+                ]
             },
             {
                 test: /\.jsx?$/i,
@@ -102,17 +117,31 @@ module.exports = {
                     },
                 }]
             }, {
+                test: /\.(mtl|obj|stl)$/i,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: "[name].[ext]",
+                            outputPath: "./assets/dateFile",
+                            // publicPath: "../dist/assets/dateFile"
+                        },
+                    },
+                ],
+            }, {
                 test: /\.(png|jpg|gif)$/i,
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'url-loader',
                         options: {
-                            name: isDevMode ? "[name].[ext]" : "[contenthash].[ext]",
-                            limit: 10000, // 10k
+                            name: "[name].[ext]",
+                            limit: 0, // 10k
                             fallback: 'responsive-loader',
                             quality: 85,
-                            outputPath: "./dist/assets/images", // 相对于当前配置文件的
-                            publicPath: "../dist/assets/images" // 打包出来的css url前面添加的公共路径
+                            outputPath: "./assets/images", // 相对于当前配置文件的
+                            // publicPath: "../assets/images" // 打包出来的css url前面添加的公共路径
                         },
                     },
                 ],
@@ -168,7 +197,7 @@ module.exports = {
     plugins: [
         new Webpack.EnvironmentPlugin(["NODE_ENV"]),
         new HtmlWebpackPlugin({
-            title: "lle's world",
+            title: "MY WORLD",
             template: "./layout/index.html",
             // filename: "index.[hash:5].html",
             minify: {
@@ -176,12 +205,18 @@ module.exports = {
             },
             hash: !isDevMode
         }),
-        new CleanWebpackPlugin(),
+        // new CopyPlugin([
+        //     { from: './assets/images', to: 'assets/dataFile' },
+        // ]),
+        // new Webpack.ProvidePlugin({
+        //     'THREE': 'three'
+        // }),
         new MiniCssExtractPlugin({
-            filename: isDevMode ? "style/[name].css" : "style/[name].[contenthash:5].css",
-            chunkFilename: isDevMode ? "style/[id].css" : "style/[id].[contenthash:5].css",
+            filename: isDevMode ? "style/[name].css" : "style/[name].[hash:5].css",
+            chunkFilename: isDevMode ? "style/[id].css" : "style/[id].[hash:5].css",
             ignoreOrder: false
-        })
+        }),
+        new CleanWebpackPlugin()
     ]
 };
 
