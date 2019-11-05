@@ -29,7 +29,7 @@ let baseOptimization = {
 module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
-        index: "./src/index.js"
+        index: path.resolve(__dirname, "src/index.tsx"),
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -49,7 +49,7 @@ module.exports = {
         hot: isDevMode
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".jsx", ".js"],
+        extensions: [".tsx", ".ts", ".jsx", ".js"]
     },
     node: {
         fs: "empty"
@@ -66,11 +66,11 @@ module.exports = {
                 }
             },
             {
-                test: /\.tsx?$/,
+                test: /\.tsx?$/i,
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
-                        loader: "balel-loader"
+                        loader: "babel-loader"
                     }, {
                         loader: "ts-loader"
                     }
@@ -177,7 +177,7 @@ module.exports = {
                 use: {
                     loader: "file-loader",
                     options: {
-                        name: isDevMode ? "[name].[ext]" : "[contenthash].[ext]",
+                        name: isDevMode ? "[name].[ext]" : "[hash:5].[ext]",
                         outputPath: "./dist/assets/videos", // 相对于当前配置文件的
                         publicPath: "../dist/assets/videos" // 打包出来的css url前面添加的公共路径
                     }

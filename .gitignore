@@ -4,6 +4,7 @@
 out
 gen
 yarn.lock
+npm.lock
 
 #
 .idea
