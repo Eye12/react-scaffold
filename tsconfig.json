@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "jsx": "preserve",
+    // "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "target": "es5",
+    "experimentalDecorators": true
+    // "strictNullChecks": true
+  },
+  "include": [
+    "./src/**/*",
+    "./index.d.ts"
+  ]
+}
