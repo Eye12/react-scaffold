@@ -32,10 +32,12 @@
     "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.7.2",
     "@babel/runtime": "^7.6.0",
     "autoprefixer": "^9.6.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
+    "bar-charts-react": "^1.0.3",
     "bundle-loader": "^0.5.6",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.4",
@@ -55,6 +57,8 @@
     "sass-loader": "^8.0.0",
     "terser-webpack-plugin": "^2.1.0",
     "ts-loader": "^6.2.1",
+    "tslint": "^5.20.1",
+    "tslint-loader": "^3.5.4",
     "typescript": "^3.6.4",
     "url-loader": "^2.1.0",
     "webpack": "^4.40.2",
@@ -64,8 +68,10 @@
   "dependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.3",
+    "prop-types": "^15.7.2",
     "react": "^16.11.0",
-    "react-dom": "^16.11.0"
+    "react-dom": "^16.11.0",
+    "react-relay": "^7.1.0"
   },
   "browserslist": [
     "defaults",

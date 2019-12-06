@@ -10,17 +10,37 @@ const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const {htmlTitle, entryFileName} = require("./projectInfo/index");
 // const CopyPlugin = require('copy-webpack-plugin');
 let isDevMode = process.env.NODE_ENV === "development";
 let baseOptimization = {
     usedExports: true, // 清除死代码
     runtimeChunk: "single",
     splitChunks: {
+        chunks: 'async',
+        minSize: 30000,
+        maxSize: 0,
+        minChunks: 2,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',
+        name: true,
         cacheGroups: {
-            vendor: {
-                test: /[\\/]node_modules[\\/]/,
-                name: "verdors",
-                chunks: "all"
+            commons: {
+                name: 'commons',
+                chunks: 'initial',
+                minChunks: 2
+            },
+            vendors: {
+                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                priority: -10,
+                name: "vendors",
+                chunks: 'all',
+            },
+            default: {
+                minChunks: 2,
+                priority: -20,
+                reuseExistingChunk: true
             }
         }
     }
@@ -29,7 +49,7 @@ let baseOptimization = {
 module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
-        index: path.resolve(__dirname, "src/index.tsx"),
+        index: path.resolve(__dirname, "src/" + entryFileName),
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -43,27 +63,39 @@ module.exports = {
         minimize: true,
         minimizer: [new TerserWebpackPlugin({}), new OptimizeCSSAssetsPlugin({})]
     }),
-    devtool: isDevMode ? "inline-source-map" : "source-map",
+    devtool: isDevMode ? "cheap-module-inline-source-map" : "cheap-module-source-map",
+    // devtool: isDevMode ? "cheap-module-eval-source-map" : "cheap-module-source-map",
     devServer: {
         contentBase: "./dist",
-        hot: isDevMode
+        hot: isDevMode,
+        compress: true
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".jsx", ".js"]
+        extensions: [".tsx", ".ts", ".jsx", ".js"],
+        // alias: {}
     },
     node: {
         fs: "empty"
     },
+    // externals: {
+    //     "React": "react"
+    // },
     module: {
         rules: [
             {
                 enforce: "pre",
-                test: /\.j|tsx?$/i,
+                test: /\.jsx?$/i,
                 exclude: /(node_modules|bower_components)/,
                 loader: "eslint-loader",
                 options: {
                     formatter: require("eslint-friendly-formatter")
                 }
+            },
+            {
+                enforce: "pre",
+                test: /\.tsx?$/i,
+                exclude: /(node_modules|bower_components)/,
+                loader: "tslint-loader"
             },
             {
                 test: /\.tsx?$/i,
@@ -137,7 +169,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             name: "[name].[ext]",
-                            limit: 0, // 10k
+                            limit: 8192,
                             fallback: 'responsive-loader',
                             quality: 85,
                             outputPath: "./assets/images", // 相对于当前配置文件的
@@ -152,7 +184,7 @@ module.exports = {
                     loader: "url-loader",
                     options: {
                         name: isDevMode ? "[name].[ext]" : "[contenthash].[ext]",
-                        limit: 8,
+                        limit: 8000,
                         fallback: "file-loader",
                         outputPath: "./dist/assets/fonts", // 相对于当前配置文件的
                         publicPath: "../dist/assets/fonts", // 打包出来的css url前面添加的公共路径
@@ -165,7 +197,7 @@ module.exports = {
                     loader: 'url-loader',
                     options: {
                         name: isDevMode ? "[name].[ext]" : "[contenthash].[ext]",
-                        limit: 8,
+                        limit: 8000,
                         fallback: "file-loader",
                         outputPath: "./dist/assets/audios", // 相对于当前配置文件的
                         publicPath: "../dist/assets/audios" // 打包出来的css url前面添加的公共路径
@@ -197,19 +229,21 @@ module.exports = {
     plugins: [
         new Webpack.EnvironmentPlugin(["NODE_ENV"]),
         new HtmlWebpackPlugin({
-            title: "MY WORLD",
+            title: htmlTitle,
             template: "./layout/index.html",
             // filename: "index.[hash:5].html",
             minify: {
                 collapseWhitespace: !isDevMode
             },
+            favicon: "./favicon.ico",
             hash: !isDevMode
         }),
         // new CopyPlugin([
         //     { from: './assets/images', to: 'assets/dataFile' },
         // ]),
         // new Webpack.ProvidePlugin({
-        //     'THREE': 'three'
+        //     "React": "react",
+        //     "ReactDOM": "react-dom"
         // }),
         new MiniCssExtractPlugin({
             filename: isDevMode ? "style/[name].css" : "style/[name].[hash:5].css",
